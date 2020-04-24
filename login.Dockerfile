@@ -1,3 +1,3 @@
-FROM judge2020/cloudflare-argo:latest
+FROM judge2020/cloudflared:latest
 
 ENTRYPOINT [ "./cloudflared", "login" ]

@@ -1,24 +1,31 @@
-# docker-cloudflare-argo-slim
+# docker-cloudflared
 
-This is a slim container for [Argo tunnel](https://www.cloudflare.com/products/argo-tunnel/), based on the container created by [@jakejarvis](https://github.com/jakejarvis/docker-cloudflare-argo).
+This is a slim container (~20mb, the size of Cloudflared for linux) for the tool Cloudflared, which includes [Argo tunnel](https://www.cloudflare.com/products/argo-tunnel/). Image testing is generally only done for Argo Tunnel, but the `latest` tag for this image is the basic `cloudflared` with no extra args, and should work for most other usages.
 
 This image uses a multi-stage Docker build to pull the latest cloudflared, determine the necessary dependencies needed, and only copy those (plus ca-certificates). See [the Dockerfile](Dockerfile).
 
-## Prerequisites
+Image: `judge2020/cloudflared:latest`
 
-Registration for Argo is done through the [Cloudflare dashboard](https://dash.cloudflare.com/) (it currently costs $5/month). 
 
-If you don't include a PEM nor a TUNNEL_HOSTNAME (but you still must have an (empty) mount point at /etc/cloudflared), you may use this for free with a automatically generated hostname at [trycloudflare.com](https://developers.cloudflare.com/argo-tunnel/trycloudflare/).
+
+## Argo Tunnel
+
+Image: `judge2020/cloudflared:argo`
+
+### Prerequisites
+
+If you don't include a PEM nor a TUNNEL_HOSTNAME (but you still must have an (empty) mount point at /.cloudflared), you may use this for free with a automatically generated hostname at [trycloudflare.com](https://developers.cloudflare.com/argo-tunnel/trycloudflare/).
 
 And, for now, a certificate file (`.pem`) [needs to be obtained via `cloudflared tunnel login`](https://developers.cloudflare.com/argo-tunnel/quickstart/#step-3-login-to-your-cloudflare-account) *before* using the container. This can be done on any computer, or by running the following script:
 
 ```
-docker run --rm -v "$PWD/config:/.cloudflared" judge2020/cloudflare-argo:login
+docker run --rm -v "$PWD/config:/.cloudflared" judge2020/cloudflared:login
 ```
 
-You may change the host bind mount to any directory or volume where the certificate (`cert.pem`) will be outputted once you authenticate.
+You may change the host bind mount (`$PWD/config`) to any directory or volume where the certificate (`cert.pem`) will be outputted once you authenticate.
 
-## Configuration
+
+### Configuration
 
 The following environment variables are required:
 
@@ -29,14 +36,14 @@ You may configure other variables via the env vars listed at https://developers.
 
 ...and your `.pem` file (the login certificate from Cloudflare) needs to be mounted to `/.cloudflared/cert.pem` on the Argo container, as shown in the example.
 
-## Usage
+### Usage
 
 ```
 docker run -d \
-           -e "TUNNEL_HOSTNAME=mytunnel.jarv.is" \
-           -e "TUNNEL_URL=http://localhost:8080" \
-           -v "/Users/jake/config/cert.pem:/.cloudflared/cert.pem" \
-           judge2020/cloudflare-argo:latest
+           -e "TUNNEL_HOSTNAME=test.example.com" \
+           -e "TUNNEL_URL=http://127.0.0.1:8080" \
+           -v "$PWD/config:/.cloudflared" \
+           judge2020/cloudflared:argo
 ```
 
 Docker Compose:
@@ -49,7 +56,7 @@ services:
         image: nginx
     
     cloudflared:
-        image: judge2020/cloudflare-argo
+        image: judge2020/cloudflared:argo
         environment: 
             - TUNNEL_HOSTNAME=test.judge.sh
             - TUNNEL_URL=http://nginx:80
@@ -67,7 +74,7 @@ services:
         image: nginx
     
     cloudflared:
-        image: judge2020/cloudflare-argo
+        image: judge2020/cloudflared:argo
         environment: 
             - TUNNEL_HOSTNAME=test.judge.sh
             - TUNNEL_URL=http://nginx:80

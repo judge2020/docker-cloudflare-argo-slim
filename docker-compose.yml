@@ -5,7 +5,7 @@ services:
         image: nginx
     
     cloudflared:
-        image: judge2020/cloudflare-argo
+        image: judge2020/cloudflared:argo
         environment: 
             - TUNNEL_HOSTNAME=test.judge.sh
             - TUNNEL_URL=http://nginx:80

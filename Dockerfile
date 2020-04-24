@@ -20,4 +20,4 @@ COPY --from=0 /deps /
 COPY --from=0 /cloudflared /
 COPY --from=0 /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/ca-certificates.crt
 
-ENTRYPOINT ["./cloudflared", "tunnel"]
+ENTRYPOINT ["./cloudflared"]
