@@ -10,4 +10,4 @@ services:
             - TUNNEL_HOSTNAME=test.judge.sh
             - TUNNEL_URL=http://nginx:80
         volumes:
-            - './config:/etc.cloudflared' # bind mount with cert.pem in it
+            - './config:/.cloudflared' # bind mount with cert.pem in it

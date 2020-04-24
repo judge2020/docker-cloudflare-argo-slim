@@ -13,11 +13,10 @@ If you don't include a PEM nor a TUNNEL_HOSTNAME (but you still must have an (em
 And, for now, a certificate file (`.pem`) [needs to be obtained via `cloudflared tunnel login`](https://developers.cloudflare.com/argo-tunnel/quickstart/#step-3-login-to-your-cloudflare-account) *before* using the container. This can be done on any computer, or by running the following script:
 
 ```
-docker run --rm -v "$PWD/config:/etc/cloudflared" judge2020/cloudflare-argo:login
+docker run --rm -v "$PWD/config:/.cloudflared" judge2020/cloudflare-argo:login
 ```
 
 You may change the host bind mount to any directory or volume where the certificate (`cert.pem`) will be outputted once you authenticate.
-
 
 ## Configuration
 
@@ -28,7 +27,7 @@ The following environment variables are required:
 
 You may configure other variables via the env vars listed at https://developers.cloudflare.com/argo-tunnel/reference/arguments/.
 
-...and your `.pem` file (the login certificate from Cloudflare) needs to be mounted to `/etc/cloudflared/cert.pem` on the Argo container, as shown in the example.
+...and your `.pem` file (the login certificate from Cloudflare) needs to be mounted to `/.cloudflared/cert.pem` on the Argo container, as shown in the example.
 
 ## Usage
 
@@ -36,7 +35,7 @@ You may configure other variables via the env vars listed at https://developers.
 docker run -d \
            -e "TUNNEL_HOSTNAME=mytunnel.jarv.is" \
            -e "TUNNEL_URL=http://localhost:8080" \
-           -v "/Users/jake/config/cert.pem:/etc/cloudflared/cert.pem" \
+           -v "/Users/jake/config/cert.pem:/.cloudflared/cert.pem" \
            judge2020/cloudflare-argo:latest
 ```
 
@@ -55,5 +54,28 @@ services:
             - TUNNEL_HOSTNAME=test.judge.sh
             - TUNNEL_URL=http://nginx:80
         volumes:
-            - './config:/etc.cloudflared' # bind mount with cert.pem in it
+            - './config:/.cloudflared' # bind mount with cert.pem in it
+```
+
+Compose, but docker swarm:
+
+```
+version: '3'
+
+services:
+    nginx:
+        image: nginx
+    
+    cloudflared:
+        image: judge2020/cloudflare-argo
+        environment: 
+            - TUNNEL_HOSTNAME=test.judge.sh
+            - TUNNEL_URL=http://nginx:80
+        secrets:
+            - source: cloudflare_cert.pem
+              target: /.cloudflared/cert.pem
+
+secrets:
+    cloudflare_cert.pem:
+        file: ./config/cert.pem
 ```
