@@ -25,6 +25,6 @@ jobs:
                 docker tag judge2020/cloudflare-argo:login docker.pkg.github.com/judge2020/docker-cloudflare-argo-slim/cloudflare-argo:login
                 docker tag judge2020/cloudflare-argo:latest judge2020/cloudflare-argo:$(date +%s)
             - name: push
-            - run: |
+              run: |
                 docker push docker.pkg.github.com/judge2020/docker-cloudflare-argo-slim/cloudflare-argo
                 docker push judge2020/cloudflare-argo
