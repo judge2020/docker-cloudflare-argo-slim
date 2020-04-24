@@ -20,7 +20,7 @@ jobs:
                 docker login docker.pkg.github.com -u anything -p $GH_TOKEN
             - run: |
                 docker build -t judge2020/cloudflare-argo:latest .
-                docker build -t judge2020/cloudflare-argo:login -f login.Dockerfile
+                docker build -t judge2020/cloudflare-argo:login -f login.Dockerfile .
             - name: Tag images
               run: |
                 docker tag judge2020/cloudflare-argo:latest docker.pkg.github.com/judge2020/docker-cloudflare-argo-slim/cloudflare-argo:$(date +%s)
