@@ -1,0 +1,13 @@
+version: '3'
+
+services:
+    nginx:
+        image: nginx
+    
+    cloudflared:
+        image: judge2020/cloudflare-argo
+        environment: 
+            - TUNNEL_HOSTNAME=test.judge.sh
+            - TUNNEL_URL=http://nginx:80
+        volumes:
+            - './config:/etc.cloudflared' # bind mount with cert.pem in it
