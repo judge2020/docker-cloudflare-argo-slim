@@ -12,6 +12,9 @@ jobs:
         steps:
             - uses: actions/checkout@v2
             - name: Login to Docker Repositories
+              env:
+                GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+                DOCKER_TOKEN: ${{ secrets.DOCKER_TOKEN }}
               run: |
                 docker login -u judge2020 -p $DOCKER_TOKEN
                 docker login docker.pkg.github.com -u anything -p $GH_TOKEN
