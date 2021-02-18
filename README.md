@@ -19,7 +19,7 @@ If you don't include a PEM nor a TUNNEL_HOSTNAME (but you still must have an (em
 And, for now, a certificate file (`.pem`) [needs to be obtained via `cloudflared tunnel login`](https://developers.cloudflare.com/argo-tunnel/quickstart/#step-3-login-to-your-cloudflare-account) *before* using the container. This can be done on any computer, or by running the following script:
 
 ```
-docker run --rm -v "$PWD/config:/.cloudflared" judge2020/cloudflared:login
+docker run --rm -v "$PWD/config:/.cloudflared" ghcr.io/judge2020/cloudflared:login
 ```
 
 You may change the host bind mount (`$PWD/config`) to any directory or volume where the certificate (`cert.pem`) will be outputted once you authenticate.
