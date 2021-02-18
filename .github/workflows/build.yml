@@ -10,7 +10,7 @@ on:
 
 jobs:
     build:
-        runs-on: ubuntu-latest
+        runs-on: ubuntu-20.04
         steps:
             - uses: actions/checkout@v2
             - name: Login to Docker Repositories
@@ -23,4 +23,4 @@ jobs:
                 docker tag ghcr.io/judge2020/cloudflared:latest ghcr.io/judge2020/cloudflared:$(date +%s)
             - name: push
               run: |
-                docker push ghcr.io/judge2020/cloudflared
+                docker push --all-tags ghcr.io/judge2020/cloudflared
