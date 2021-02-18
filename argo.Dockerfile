@@ -1,4 +1,4 @@
-FROM judge2020/cloudflared:latest
+FROM ghcr.io/judge2020/cloudflared:latest
 
 
 ENTRYPOINT ["./cloudflared", "tunnel", "--no-autoupdate"]

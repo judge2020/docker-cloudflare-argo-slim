@@ -14,24 +14,13 @@ jobs:
         steps:
             - uses: actions/checkout@v2
             - name: Login to Docker Repositories
-              env:
-                GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-                DOCKER_TOKEN: ${{ secrets.DOCKER_TOKEN }}
               run: |
-                docker login -u judge2020 -p $DOCKER_TOKEN
-                docker login docker.pkg.github.com -u anything -p $GH_TOKEN
+                echo ${{ secrets.CR_PAT }} | docker login ghcr.io -u $GITHUB_ACTOR --password-stdin
             - run: |
-                docker build -t judge2020/cloudflared:latest .
-                docker build -t judge2020/cloudflared:login -f login.Dockerfile .
-                docker build -t judge2020/cloudflared:argo -f argo.Dockerfile .
-            - name: Tag images
-              run: |
-                docker tag judge2020/cloudflared:latest docker.pkg.github.com/judge2020/docker-cloudflared/cloudflared:$(date +%s)
-                docker tag judge2020/cloudflared:latest docker.pkg.github.com/judge2020/docker-cloudflared/cloudflared:latest
-                docker tag judge2020/cloudflared:login docker.pkg.github.com/judge2020/docker-cloudflared/cloudflared:login
-                docker tag judge2020/cloudflared:argo docker.pkg.github.com/judge2020/docker-cloudflared/cloudflared:argo
-                docker tag judge2020/cloudflared:latest judge2020/cloudflared:$(date +%s)
+                docker build -t ghcr.io/judge2020/cloudflared:latest . --cache-from ghcr.io/judge2020/cloudflared:latest
+                docker build -t ghcr.io/judge2020/cloudflared:login -f login.Dockerfile .
+                docker build -t ghcr.io/judge2020/cloudflared:argo -f argo.Dockerfile .
+                docker tag ghcr.io/judge2020/cloudflared:latest ghcr.io/judge2020/cloudflared:$(date +%s)
             - name: push
               run: |
-                docker push docker.pkg.github.com/judge2020/docker-cloudflared/cloudflared
-                docker push judge2020/cloudflared
+                docker push ghcr.io/judge2020/cloudflared

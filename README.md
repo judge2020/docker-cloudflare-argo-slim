@@ -4,13 +4,13 @@ This is a slim container (~20mb, the size of Cloudflared for linux) for the tool
 
 This image uses a multi-stage Docker build to pull the latest cloudflared, determine the necessary dependencies needed, and only copy those (plus ca-certificates). See [the Dockerfile](Dockerfile).
 
-Image: `judge2020/cloudflared:latest`
+Image: `ghcr.io/judge2020/cloudflared:latest`
 
 
 
 ## Argo Tunnel
 
-Image: `judge2020/cloudflared:argo`
+Image: `ghcr.io/judge2020/cloudflared:argo`
 
 ### Prerequisites
 
@@ -43,7 +43,7 @@ docker run -d \
            -e "TUNNEL_HOSTNAME=test.example.com" \
            -e "TUNNEL_URL=http://127.0.0.1:8080" \
            -v "$PWD/config:/.cloudflared" \
-           judge2020/cloudflared:argo
+           ghcr.io/judge2020/cloudflared:argo
 ```
 
 Docker Compose:
@@ -56,7 +56,7 @@ services:
         image: nginx
     
     cloudflared:
-        image: judge2020/cloudflared:argo
+        image: ghcr.io/judge2020/cloudflared:argo
         environment: 
             - TUNNEL_HOSTNAME=test.judge.sh
             - TUNNEL_URL=http://nginx:80
@@ -74,7 +74,7 @@ services:
         image: nginx
     
     cloudflared:
-        image: judge2020/cloudflared:argo
+        image: ghcr.io/judge2020/cloudflared:argo
         environment: 
             - TUNNEL_HOSTNAME=test.judge.sh
             - TUNNEL_URL=http://nginx:80
